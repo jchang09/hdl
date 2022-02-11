@@ -52,12 +52,15 @@ module system_top (
   inout               pmod0_d5,
   inout               pmod0_d6,
   inout               pmod0_d7,
-  output              gpio_0_exp_n, //CS0n
+  output              gpio_0_exp_n, //CS_HMC7044
   output              gpio_0_exp_p, //MOSI
   input               gpio_1_exp_n, //MISO
   output              gpio_1_exp_p, //SCK
-  output              gpio_2_exp_n, //CS2n
+  output              gpio_2_exp_n, //CS_AD9545
   output              gpio_2_exp_p, //CS2p
+  inout               gpio_3_exp_n, //RESET_HMC7044
+  inout               gpio_3_exp_p, //RESET_AD9545
+  inout               gpio_4_exp_n, //VCXO_SELECT
   output              led_gpio_0,
   output              led_gpio_1,
   output              led_gpio_2,
@@ -404,7 +407,7 @@ module system_top (
 
   assign tx_sync = tx_sync_a & tx_sync_b & tx_sync_c & tx_sync_d;
 
-  assign gpio_i[94:90] = gpio_o[94:90];
+  assign gpio_i[94:93] = gpio_o[94:93];
   assign gpio_i[31:28] = gpio_o[31:28];
   assign gpio_i[21:20] = gpio_o[21:20];
 
@@ -452,11 +455,14 @@ module system_top (
               adrv9009_gpio_01_c,       // 01
               adrv9009_gpio_00_c}));    // 00
 
-  ad_iobuf #(.DATA_WIDTH(58)) i_iobuf (
-    .dio_t ({gpio_t[89:32]}),
-    .dio_i ({gpio_o[89:32]}),
-    .dio_o ({gpio_i[89:32]}),
+  ad_iobuf #(.DATA_WIDTH(61)) i_iobuf (
+    .dio_t ({gpio_t[92:32]}),
+    .dio_i ({gpio_o[92:32]}),
+    .dio_o ({gpio_i[92:32]}),
     .dio_p ({
+              gpio_4_exp_n,             // 92
+              gpio_3_exp_n,             // 91
+              gpio_3_exp_p,             // 90
               hmc7044_gpio_4,           // 89
               hmc7044_gpio_3,           // 88
               hmc7044_gpio_2,           // 87
